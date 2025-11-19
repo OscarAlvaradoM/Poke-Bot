@@ -1,6 +1,7 @@
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ConversationHandler
 
 from handlers.start import start
+from handlers.saldo import saldo
 from handlers.gasto import (
     gasto,
     recibir_descripcion,
@@ -29,7 +30,7 @@ def main():
 
     app.add_handler(conv_handler)
     app.add_handler(CommandHandler("start", start))
-
+    app.add_handler(CommandHandler("saldo", saldo))
 
     print("Bot corriendo…")
     app.run_polling()
