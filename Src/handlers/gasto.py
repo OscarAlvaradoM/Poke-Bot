@@ -40,20 +40,21 @@ async def recibir_monto(update: Update, context: ContextTypes.DEFAULT_TYPE):
     registros = sheet.get_all_records()
     mes_actual = datetime.now().strftime("%Y-%m")
 
-    print(registros)
     total_mes = sum(
         float(r["monto"].replace("$", "").replace(",", "")) for r in registros
         if r["fecha"].startswith(mes_actual)
     )
 
     restante = PRESUPUESTO - total_mes
+    respuesta = f"❌ Ya se pasaron por: ${-restante:,.2f} ❌" if restante < 0 else f"💵 Presupuesto restante: ${restante:,.2f} de ${PRESUPUESTO:,.2f}"
+
 
     await update.message.reply_text(
         f"✅ Gasto registrado:\n"
         f"- {descripcion}\n"
-        f"- ${context.user_data['monto']:.2f}\n\n"
-        f"📊 **Este mes llevan gastado:** ${total_mes:.2f}\n"
-        f"💵 **Presupuesto restante:** ${restante:.2f} de ${PRESUPUESTO:.2f}"
+        f"- ${context.user_data['monto']:,.2f}\n\n"
+        f"📊 Este mes llevan gastado: ${total_mes:,.2f}\n"
+        f"{respuesta}"
     )
 
     return ConversationHandler.END
