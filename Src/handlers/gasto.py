@@ -20,29 +20,29 @@ async def recibir_descripcion(update: Update, context: ContextTypes.DEFAULT_TYPE
     return MONTO
 
 async def recibir_monto(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    
     try:
-        monto = float(update.message.text)
+        context.user_data["monto"] = float(update.message.text.replace("$", "").replace(",", ""))
     except ValueError:
         await update.message.reply_text("❌ Por favor escribe un número válido.")
         return MONTO
 
     sheet = init_gsheet()
 
-    context.user_data["monto"] = monto
-
     # Registrar en Sheets
     fecha = datetime.now().strftime("%Y-%m-%d")
     usuario = update.effective_user.first_name
     descripcion = context.user_data["descripcion"]
-    row = [fecha, usuario, descripcion, monto]
+    row = [fecha, usuario, descripcion, context.user_data["monto"]]
     sheet.append_row(row)
 
     # Calcular total gastado en el mes
     registros = sheet.get_all_records()
     mes_actual = datetime.now().strftime("%Y-%m")
 
+    print(registros)
     total_mes = sum(
-        float(r["monto"]) for r in registros
+        float(r["monto"].replace("$", "").replace(",", "")) for r in registros
         if r["fecha"].startswith(mes_actual)
     )
 
@@ -51,7 +51,7 @@ async def recibir_monto(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"✅ Gasto registrado:\n"
         f"- {descripcion}\n"
-        f"- ${monto:.2f}\n\n"
+        f"- ${context.user_data['monto']:.2f}\n\n"
         f"📊 **Este mes llevan gastado:** ${total_mes:.2f}\n"
         f"💵 **Presupuesto restante:** ${restante:.2f} de ${PRESUPUESTO:.2f}"
     )
