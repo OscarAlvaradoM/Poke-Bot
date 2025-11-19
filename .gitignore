@@ -5,6 +5,7 @@ Credenciales/
 
 # Evitar pycache
 __pycache__/
+*/__pycache__/
 *.py[cod]
 
 # Evitar checkpoints de Jupyter

@@ -46,7 +46,7 @@ async def recibir_monto(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     restante = PRESUPUESTO - total_mes
-    #respuesta = f"❌ Ya se pasaron por: ${-restante:,.2f} ❌" if restante < 0 else f"💵 Presupuesto restante: ${restante:,.2f} de ${PRESUPUESTO:,.2f}"
+    respuesta = f"❌ Ya se pasaron por: ${-restante:,.2f} ❌" if restante < 0 else f"💵 Presupuesto restante: ${restante:,.2f} de ${PRESUPUESTO:,.2f}"
 
 
     await update.message.reply_text(
@@ -54,7 +54,7 @@ async def recibir_monto(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"- {descripcion}\n"
         f"- ${context.user_data['monto']:,.2f}\n\n"
         f"📊 Este mes llevan gastado: ${total_mes:,.2f}\n"
-        #f"{respuesta}"
+        f"{respuesta}"
     )
 
     return ConversationHandler.END
